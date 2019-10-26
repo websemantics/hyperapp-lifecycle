@@ -1,6 +1,19 @@
-# Hyperapp Lifecycle
+```
+                              ╭──╮╭───┬╮╭────╮
+                          ╭──╮├──┤│    ││ ─  │╭────╮
+  ╭────◉  connected       │  ││  ││   ─┤│    ││ ╭──╯╭──╮╭╮
+  │                       │  ││  ││   ╭╯│ ───┤│ ╰──╮│  │││╭────╮
+╭─┴─╮ ╭──╮╭╮              │  │╰──╯╰───╯ ╰────╯│    ││  ╰╯││ ╭──╯╭──╮╭────╮
+│   ╰╮│  │││╭────╮        ╰──╯                ╰────╯├─── ││ ╰──╮│  ││ ─  │
+│    ││  ╰╯││  ╭╮│╭────╮       \||/ ╭────╮╭────╮    ╰────╯│    ││  ││    │
+│  ╭╮│├─── ││  ╰╯││ ─  │╭──┬─╮╭(oo)╮│  ╭╮││  ╭╮│          ╰────╯│  ││ ───┤
+╰──╯╰╯╰────╯│   ╭╯│    ││    │├─── ││  ╰╯││  ╰╯│                ╰──╯╰──┬─╯
+            ╰───╯ │ ───┤│   ╭╯│╭╮  ││   ╭╯│   ╭╯  disconnected  ◉──────╯
+                  ╰────╯│   │ │╰╯  │╰───╯ ╰───╯
+                        ╰───╯ ╰──┴─╯
+```
 
-Small wrapper for Hyperapp to emulate `connected` and `disconnected` lifecycle events
+> Small wrapper for Hyperapp to emulate `connected` and `disconnected` lifecycle events
 
 ## Usage
 
