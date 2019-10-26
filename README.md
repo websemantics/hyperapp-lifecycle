@@ -22,6 +22,8 @@ With super lean code however, it is inevitable some features that we might be us
 
 One such feature is the ability to grab the reference of a newly created or removed DOM node. I found myself wanting this feature since I started using Hyperapp few weeks ago and this package is one possible answer for this requirement.
 
+[![Live demo](https://img.shields.io/badge/Live%20demo-%E2%86%92-9D6EB3.svg?style=flat-square)](https://websemantics.github.io/hyperapp-lifecycle/)
+
 ## Usage
 
  Full app lifecycle events coverage including app root node
@@ -60,7 +62,7 @@ Need help or have a question? post a questions at [StackOverflow](https://stacko
 
 ## Contributions
 
-Happy to accept external contributions to the project in the form of feedback, bug reports and even better - pull requests :)
+Happy to accept external contributions to the project in the form of feedback, bug reports and even better - pull requests
 
 ## Credits
 
