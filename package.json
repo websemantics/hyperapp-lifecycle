@@ -1,0 +1,43 @@
+{
+  "name": "hyperapp-lifecycle",
+  "version": "0.0.1",
+  "description": "Small wrapper for Hyperapp to emulate connected and disconnected lifecycle events",
+  "main": "dist/lifecycle.js",
+  "module": "src/index.js",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "test": "exit 0",
+    "prebuild": "npm run test",
+    "build": "rollup -n hyperappLifecycle -f umd -i src/index.js -o dist/lifecycle.js",
+    "postbuild": "terser dist/lifecycle.js -o dist/lifecycle.js -mc --source-map includeSources,url=lifecycle.js.map",
+    "version": "npm run build -s",
+    "postversion": "git push && git push --tags && npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/websemantics/hyperapp-lifecycle.git"
+  },
+  "keywords": [
+    "hyperapp",
+    "lifecycle"
+  ],
+  "author": "Adnan M.Sagar",
+  "contributors": [
+    "Sergey Shpak (https://github.com/sergey-shpak)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/websemantics/hyperapp-lifecycle/issues"
+  },
+  "homepage": "https://github.com/websemantics/hyperapp-lifecycle#readme",
+  "devDependencies": {
+    "rollup": "^1.25.0",
+    "terser": "^4.3.1"
+  },
+  "peerDependencies": {
+    "hyperapp": "^2.0.3"
+  }
+}
