@@ -23,14 +23,16 @@ One such feature is the ability to grab the reference of a newly created or remo
 
 ## Usage
 
- Full app lifecycle events coverage including app root node
+Full app lifecycle events coverage including app root node
 
- ```js
+```js
 import * as hyperapp from 'https://unpkg.com/hyperapp?module'
 import { timeout } from '@hyperapp/time'
 import { lifecycle } from 'https://unpkg.com/hyperapp-lifecycle?module'
 
-const Log = type => (state, evt) => console.log('Connected:', evt.detail.tagName) || state
+const { app, h } = lifecycle(hyperapp)
+
+const Log = type => (state, evt) => console.log(`${type}:`, evt.detail.tagName) || state
 const RemoveWorld = (state) => ({...state, world: false})
 
 app({
@@ -38,6 +40,38 @@ app({
     h('section', { onconnected: Log('Connected') },                       // Connected: SECTION
       h('main', { onconnected: Log('Connected') },                        // Connected: MAIN
         h('div', { onconnected: Log('Connected') },                       // Connected: DIV
+          h('span', null, 'hello'),
+          state.world &&
+            h('span', { ondisconnected: Log('Disconnected') }, 'world')   // Disconnected: SPAN
+        )
+      )
+    ),
+  node: document.getElementById('node'),
+  subscriptions: state =>[
+    timeout(RemoveWorld, {delay:1000})
+  ]
+})
+ ```
+
+## Lite Mode
+
+Lite mode features a supplementary function `l` that can be used as needed and where `h` remains unchanged. This gives more control on which nodes are allowed to fire lifecycle events for their children. The root node lifecycle events will be trigger as in full coverage mode.
+
+```js
+import * as hyperapp from 'https://unpkg.com/hyperapp?module'
+import { timeout } from '@hyperapp/time'
+import { lifecycle } from 'https://unpkg.com/hyperapp-lifecycle?module'
+
+const { app, h, l } = lifecycle(hyperapp, /* lite mode */ true)
+
+const Log = type => (state, evt) => console.log(`${type}:`, evt.detail.tagName) || state
+const RemoveWorld = (state) => ({...state, world: false})
+
+app({
+  init: {world: true}, view: state =>
+    h('section', { onconnected: Log('Connected') },                       // Connected: SECTION
+      h('main', { onconnected: Log('Connected') },
+        l('div', { onconnected: Log('Connected') },
           h('span', null, 'hello'),
           state.world &&
             h('span', { ondisconnected: Log('Disconnected') }, 'world')   // Disconnected: SPAN
