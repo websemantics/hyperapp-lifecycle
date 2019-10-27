@@ -11,7 +11,7 @@
   "scripts": {
     "test": "exit 0",
     "prebuild": "npm run test",
-    "build": "rollup -n hyperappLifecycle -f umd -i src/index.js -o dist/lifecycle.js",
+    "build": "rollup -n Lifecycle -f umd -i src/index.js -o dist/lifecycle.js",
     "postbuild": "terser dist/lifecycle.js -o dist/lifecycle.js -mc --source-map includeSources,url=lifecycle.js.map",
     "version": "npm run build -s",
     "postversion": "git push && git push --tags && npm publish --access public"
