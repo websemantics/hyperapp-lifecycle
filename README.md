@@ -17,9 +17,13 @@
 
 ## Overview
 
-Hyperapp is super tiny ui framework that is centered around app state with awesome flexibility and rich ecosystem. With super lean code however, it is inevitable some features that we might be used to aren't available in the core library.
+[Hyperapp](https://github.com/jorgebucaran/hyperapp) is super tiny ui framework that is centered around app state with awesome flexibility and rich ecosystem. With super lean code however, it is inevitable that some features that we might be used to aren't available in the core library.
 
-One such feature is the ability to grab the reference of a newly created or removed DOM node. I found myself wanting this feature since I started using Hyperapp few weeks ago and this package is one possible answer for this requirement.
+One such feature is the ability to grab the reference of a newly created or being removed DOM node. I found myself wanting this feature since I started using Hyperapp few weeks ago and this package is one possible answer for this requirement.
+
+## What do you get
+
+Ability to listen to two lifecycle events, `connected` and `disconnected` similar to `connectedCallback` and `disconnectedCallback` methods in [custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements).
 
 ## Usage
 
@@ -54,7 +58,7 @@ app({
 })
  ```
 
-## Lite Mode
+## Lite mode
 
 Lite mode features a supplementary function `l` that can be used as needed and where `h` remains unchanged. This gives more control on which nodes are allowed to fire lifecycle events for their children. The root node lifecycle events will be triggered as in full coverage mode.
 
