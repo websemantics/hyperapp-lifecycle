@@ -57,6 +57,8 @@ app({
 
 Lite mode features a supplementary function `l` that can be used as needed and where `h` remains unchanged. This gives more control on which nodes are allowed to fire lifecycle events for their children. The root node lifecycle events will be trigger as in full coverage mode.
 
+The main point here to be aware of -as shown by the example below- is that, the use of `l` will ensure lifecycle events for children nodes and not for the node itself.
+
 ```js
 import * as hyperapp from 'https://unpkg.com/hyperapp?module'
 import { timeout } from '@hyperapp/time'
