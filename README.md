@@ -56,7 +56,7 @@ app({
 
 ## Lite Mode
 
-Lite mode features a supplementary function `l` that can be used as needed and where `h` remains unchanged. This gives more control on which nodes are allowed to fire lifecycle events for their children. The root node lifecycle events will be trigger as in full coverage mode.
+Lite mode features a supplementary function `l` that can be used as needed and where `h` remains unchanged. This gives more control on which nodes are allowed to fire lifecycle events for their children. The root node lifecycle events will be triggered as in full coverage mode.
 
 The main point here to be aware of -as shown by the example below- is that, the use of `l` will ensure lifecycle events for children nodes and not for the node itself.
 
@@ -101,7 +101,7 @@ Happy to accept external contributions to the project in the form of feedback, b
 
 ## Credits
 
-This package is based on the work of [Sergey Shpak](https://github.com/sergey-shpak) as can be viewed [here](https://gist.github.com/sergey-shpak/c1e0db3d52019eecb0b5717e8cbf00ad). The code performs black magic to hijack few of the node DOM methods in order to fire custom events. In addition to adding few extra features, the original code was slightly modified to ensure connected event is fired on `appendChild` and `insertBefore` calls.
+This package is based on the work of [Sergey Shpak](https://github.com/sergey-shpak) as can be viewed [here](https://gist.github.com/sergey-shpak/c1e0db3d52019eecb0b5717e8cbf00ad). The code performs black magic to hijack few of the node DOM methods in order to fire custom events. In addition to adding few extra features, the original code was slightly modified to ensure connected events are fired on `appendChild` and `insertBefore` calls.
 
 ## Copyright and license
 
