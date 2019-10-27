@@ -29,7 +29,7 @@ export function lifecycle(hyperapp, lite = false) {
    * Lifecycle app to use instead of original `hyperapp.app`
    *
    * @description This will ensure that the app root node can receive the two
-   * lifecycle events, `connected` and `connected`
+   * lifecycle events, `connected` and `disconnected`
    */
   function app(props) {
     props.node.parentNode.appendChild = wrap('appendChild', CONNECTED)
