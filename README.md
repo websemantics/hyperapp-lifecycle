@@ -36,7 +36,8 @@ const Log = type => (state, evt) => console.log(`${type}:`, evt.detail.tagName) 
 const RemoveWorld = (state) => ({...state, world: false})
 
 app({
-  init: {world: true}, view: state =>
+  init: {world: true},
+  view: state =>
     h('section', { onconnected: Log('Connected') },                       // Connected: SECTION
       h('main', { onconnected: Log('Connected') },                        // Connected: MAIN
         h('div', { onconnected: Log('Connected') },                       // Connected: DIV
@@ -70,7 +71,8 @@ const Log = type => (state, evt) => console.log(`${type}:`, evt.detail.tagName) 
 const RemoveWorld = (state) => ({...state, world: false})
 
 app({
-  init: {world: true}, view: state =>
+  init: {world: true},
+  view: state =>
     h('section', { onconnected: Log('Connected') },                       // Connected: SECTION
       h('main', { onconnected: Log('Connected') },
         l('div', { onconnected: Log('Connected') },

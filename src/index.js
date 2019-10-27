@@ -1,6 +1,8 @@
 /**
  * Small wrapper for Hyperapp to emulate `connected` and `disconnected`
  * lifecycle events by means of custom events.
+ *
+ * @author Adnan M.Sagar <adnan@websemantics.ca>
  */
 
 /* User configurable event types */
@@ -45,6 +47,7 @@ export function lifecycle(hyperapp, lite = false) {
     }
   }
 
+  /* Use original hyperapp.h in lite mode */
   const h = lite ? hyperapp.h : l
 
   return { app, h, l }
