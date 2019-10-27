@@ -93,6 +93,10 @@ app({
 })
  ```
 
+## Credits
+
+This package is based on the work of [Sergey Shpak](https://github.com/sergey-shpak) as can be viewed [here](https://gist.github.com/sergey-shpak/c1e0db3d52019eecb0b5717e8cbf00ad). The code performs black magic to hijack few of the node DOM methods in order to fire custom events. In addition to adding few extra features, the original code was slightly modified to ensure connected events are fired on `appendChild` and `insertBefore` calls.
+
 ## Support
 
 Need help or have a question? post a questions at [StackOverflow](https://stackoverflow.com/questions/tagged/hyperapp-lifecycle+web+semantics)
@@ -102,10 +106,6 @@ Need help or have a question? post a questions at [StackOverflow](https://stacko
 ## Contributions
 
 Happy to accept external contributions to the project in the form of feedback, bug reports and even better - pull requests
-
-## Credits
-
-This package is based on the work of [Sergey Shpak](https://github.com/sergey-shpak) as can be viewed [here](https://gist.github.com/sergey-shpak/c1e0db3d52019eecb0b5717e8cbf00ad). The code performs black magic to hijack few of the node DOM methods in order to fire custom events. In addition to adding few extra features, the original code was slightly modified to ensure connected events are fired on `appendChild` and `insertBefore` calls.
 
 ## Copyright and license
 
