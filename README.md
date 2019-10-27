@@ -17,41 +17,38 @@
 
 ## Overview
 
-Hyperapp is super tiny ui framework that is centered around app state with awesome features rich ecosystem.
-With super lean code however, it is inevitable some features that we might be used to aren't available in the core library.
+Hyperapp is super tiny ui framework that is centered around app state with awesome flexibility and rich ecosystem. With super lean code however, it is inevitable some features that we might be used to aren't available in the core library.
 
 One such feature is the ability to grab the reference of a newly created or removed DOM node. I found myself wanting this feature since I started using Hyperapp few weeks ago and this package is one possible answer for this requirement.
-
-[![Live demo](https://img.shields.io/badge/Live%20demo-%E2%86%92-9D6EB3.svg?style=flat-square)](https://websemantics.github.io/hyperapp-lifecycle/)
 
 ## Usage
 
  Full app lifecycle events coverage including app root node
 
  ```js
- import * as hyperapp from 'https://unpkg.com/hyperapp?module'
- import { lifecycle } from 'https://unpkg.com/hyperapp-lifecycle?module'
+import * as hyperapp from 'https://unpkg.com/hyperapp?module'
+import { timeout } from '@hyperapp/time'
+import { lifecycle } from 'https://unpkg.com/hyperapp-lifecycle?module'
 
-  const onconnected = (state, evt) => console.log('Connected:', evt.target.tagName) || state
-  const ondisconnected = (state, evt) => console.log('Disconnected:', evt.target.tagName) || state
+const Log = type => (state, evt) => console.log('Connected:', evt.detail.tagName) || state
+const RemoveWorld = (state) => ({...state, world: false})
 
-  const {h, app} = lifecycle(hyperapp)
-
-  app(init:{}, view =>
-   h('section', {onconnected},                      // Connected: SECTION
-     h('main', {onconnected},                       // Connected: MAIN
-       h('div', {onconnected},                      // Connected: DIV
-        h('span',{ondisconnected, id: 'removeme'})  // Disconnected: SPAN
-       )
+app({
+  init: {world: true}, view: state =>
+    h('section', { onconnected: Log('Connected') },                       // Connected: SECTION
+      h('main', { onconnected: Log('Connected') },                        // Connected: MAIN
+        h('div', { onconnected: Log('Connected') },                       // Connected: DIV
+          h('span', null, 'hello'),
+          state.world &&
+            h('span', { ondisconnected: Log('Disconnected') }, 'world')   // Disconnected: SPAN
+        )
       )
     ),
-  node: document.getElementById('app')
-  )
-
-  setTimeout(()=> {
-    var node = document.getElementById('removeme')
-    node.parentNode.removeChild(node)
-    }, 1000)
+  node: document.getElementById('node'),
+  subscriptions: state =>[
+    timeout(RemoveWorld, {delay:1000})
+  ]
+})
  ```
 
 ## Support
@@ -66,9 +63,7 @@ Happy to accept external contributions to the project in the form of feedback, b
 
 ## Credits
 
-This package is based on the work of [Sergey Shpak](https://github.com/sergey-shpak) as can be viewed [here](https://gist.github.com/sergey-shpak/c1e0db3d52019eecb0b5717e8cbf00ad). The code performs black magic to hijack few of the node DOM methods in order to fire custom events.
-
-In addition to adding few extra features, the original code was slightly modified and then optimized for efficient use of the `wrap` function so that it is used only for nodes with defined event handlers.
+This package is based on the work of [Sergey Shpak](https://github.com/sergey-shpak) as can be viewed [here](https://gist.github.com/sergey-shpak/c1e0db3d52019eecb0b5717e8cbf00ad). The code performs black magic to hijack few of the node DOM methods in order to fire custom events. In addition to adding few extra features, the original code was slightly modified to ensure connected event is fired on `appendChild` and `insertBefore` calls.
 
 ## Copyright and license
 
