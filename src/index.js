@@ -3,7 +3,7 @@
  * lifecycle events by means of custom events.
  */
 
- /* User configurable event types */
+/* User configurable event types */
 export let CONNECTED = 'connected'
 export let DISCONNECTED = 'disconnected'
 
@@ -11,14 +11,15 @@ export let DISCONNECTED = 'disconnected'
  * Wrapper around Hyperapp `app` and `h` functions.
  *
  * @param {Module} hyperapp - Imported Hyperapp module (see example above)
- * @returns {Object} {app, h}
+ * @param {Boolean} lite - If true, `h` remains unchanged and `l` is used as needed
+ * @returns {Object} {app, h, l}
  */
 
-export function lifecycle(hyperapp) {
+export function lifecycle(hyperapp, lite = false) {
   /**
    * Lifecycle hyperscript shorthand to use instead of original `hyperapp.h`
    */
-  function h() {
+  function l() {
     return withChildLifeCycle(hyperapp.h.apply(null, arguments))
   }
 
@@ -40,11 +41,13 @@ export function lifecycle(hyperapp) {
      * by Hyperapp (will not incur `appendChild` or `insertBefore` calls)
      */
     if (props.view(props.init).name === props.node.nodeName.toLowerCase()) {
-      defer(() => props.node.dispatchEvent(new CustomEvent(CONNECTED, { target: props.node })))
+      defer(() => props.node.dispatchEvent(new CustomEvent(CONNECTED, { detail: props.node })))
     }
   }
 
-  return { app, h}
+  const h = lite ? hyperapp.h : l
+
+  return { app, h, l }
 }
 
 /* Shamelessly stolen from Hyperapp */
@@ -57,38 +60,32 @@ var defer = typeof requestAnimationFrame !== "undefined" ? requestAnimationFrame
  *
  * ## Note
  *
- * The code has been slightly modified from the original and to optimize for efficient
- * use of the `wrap` function (only used for nodes with defined event handlers)
+ * The code has been slightly modified from the original to ensure connected event
+ * is fired on `appendChild` and `insertBefore` calls.
  *
  * @source https://gist.github.com/sergey-shpak/c1e0db3d52019eecb0b5717e8cbf00ad
  * @see https://github.com/jorgebucaran/hyperapp/issues/717
  */
 
 function withChildLifeCycle(node) {
-
-  /* Attach wrappers for nodes with defined event handlers only */
-  const added = node.props[`on${CONNECTED}`] ? {
-    appendChild: wrap('appendChild', CONNECTED),
-    insertBefore: wrap('insertBefore', CONNECTED)
-  } : {}
-
-  const removed = node.props[`on${DISCONNECTED}`] ? {
-    removeChild: wrap('removeChild', DISCONNECTED)
-  } : {}
-
   return {
     ...node,
     props: {
-      ...added,
-      ...removed,
+      appendChild: wrap('appendChild', CONNECTED),
+      insertBefore: wrap('insertBefore', CONNECTED),
+      removeChild: wrap('removeChild', DISCONNECTED),
       ...node.props
     }
   }
 }
 
-function wrap(fn, eventType) {
-  return function (target) {
-    defer(() => target.dispatchEvent(new CustomEvent(eventType, { target })))
-    return Object.getPrototypeOf(this)[fn].apply(this, arguments)
+function wrap(method, typeArg) {
+  /**
+   * @param {customEventInit} detail - Target node
+   */
+  return function (detail) {
+    defer(() => detail.dispatchEvent(new CustomEvent(typeArg, { detail })))
+    return Object.getPrototypeOf(this)[method].apply(this, arguments)
   }
 }
+
