@@ -27,7 +27,7 @@ Ability to listen to two lifecycle events, `connected` and `disconnected` simila
 
 ## Usage
 
-Full app lifecycle events coverage including app root node
+Full app lifecycle events coverage including app root node.
 
 ```js
 import * as hyperapp from 'https://unpkg.com/hyperapp?module'
@@ -36,7 +36,7 @@ import { lifecycle } from 'https://unpkg.com/hyperapp-lifecycle?module'
 
 const { app, h } = lifecycle(hyperapp)
 
-const Log = type => (state, evt) => console.log(`${type}:`, evt.detail.tagName) || state
+const Log = type => (state, evt) => console.log(`${type}:`, evt.target.tagName) || state
 const RemoveWorld = (state) => ({...state, world: false})
 
 app({
@@ -58,6 +58,8 @@ app({
 })
  ```
 
+Notice that, the custom event `target` is the DOM node that defined the event handler.
+
 ## Lite mode
 
 Lite mode features a supplementary function `l` that can be used as needed and where `h` remains unchanged. This gives more control on which nodes are allowed to fire lifecycle events for their children. The root node lifecycle events will be triggered as in full coverage mode.
@@ -71,7 +73,7 @@ import { lifecycle } from 'https://unpkg.com/hyperapp-lifecycle?module'
 
 const { app, h, l } = lifecycle(hyperapp, /* lite mode */ true)
 
-const Log = type => (state, evt) => console.log(`${type}:`, evt.detail.tagName) || state
+const Log = type => (state, evt) => console.log(`${type}:`, evt.target.tagName) || state
 const RemoveWorld = (state) => ({...state, world: false})
 
 app({

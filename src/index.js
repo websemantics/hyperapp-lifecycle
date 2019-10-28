@@ -43,7 +43,7 @@ export function lifecycle(hyperapp, lite = false) {
      * by Hyperapp (will not incur `appendChild` or `insertBefore` calls)
      */
     if (props.view(props.init).name === props.node.nodeName.toLowerCase()) {
-      defer(() => props.node.dispatchEvent(new CustomEvent(CONNECTED, { detail: props.node })))
+      defer(() => props.node.dispatchEvent(new CustomEvent(CONNECTED)))
     }
   }
 
@@ -84,10 +84,10 @@ function withChildLifeCycle(node) {
 
 function wrap(method, typeArg) {
   /**
-   * @param {customEventInit} detail - Target node
+   * @param {customEventInit} target - Target node
    */
-  return function (detail) {
-    defer(() => detail.dispatchEvent(new CustomEvent(typeArg, { detail })))
+  return function (target) {
+    defer(() => target.dispatchEvent(new CustomEvent(typeArg)))
     return Object.getPrototypeOf(this)[method].apply(this, arguments)
   }
 }
