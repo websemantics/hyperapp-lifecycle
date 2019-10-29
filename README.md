@@ -15,9 +15,9 @@
 
 > Small wrapper for Hyperapp and Superfine to emulate `connected` and `disconnected` lifecycle events.
 
-[![Hyperapp demo](https://img.shields.io/badge/Live%20demo-%E2%86%92-9D6EB3.svg?style=flat-square)](https://websemantics.github.io/hyperapp-lifecycle/demo/hyperapp.html)
+[![Hyperapp demo](https://img.shields.io/badge/Hyperapp%20demo-%E2%86%92-9D6EB3.svg?style=flat-square)](https://websemantics.github.io/hyperapp-lifecycle/demo/hyperapp.html)
 
-[![Superfine demo](https://img.shields.io/badge/Live%20demo-%E2%86%92-9D6EB3.svg?style=flat-square)](https://websemantics.github.io/hyperapp-lifecycle/demo/superfine.html)
+[![Superfine demo](https://img.shields.io/badge/Superfine%20demo-%E2%86%92-9D6EB3.svg?style=flat-square)](https://websemantics.github.io/hyperapp-lifecycle/demo/superfine.html)
 
 ## Overview
 
