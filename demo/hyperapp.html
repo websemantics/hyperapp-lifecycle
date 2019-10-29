@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hyperapp</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      padding: 10px;
+    }
+
+    p {
+      font-size: 12px;
+    }
+  </style>
+  <script type="module">
+    import * as hyperapp from 'https://unpkg.com/hyperapp?module'
+    import { timeout } from 'https://unpkg.com/@hyperapp/time?module'
+    import { lifecycle } from 'https://unpkg.com/hyperapp-lifecycle?module'
+
+    const { app, h } = lifecycle(hyperapp)
+
+    const Log = type => (state, evt) => console.log(`${type}:`, evt.target.tagName) || state
+    const RemoveWorld = state => ({ ...state, world: false })
+
+    const init = { world: true }
+
+    const view = state =>
+      h('section', { onconnected: Log('Connected') },                    // Connected: SECTION
+        h('main', { onconnected: Log('Connected') },                     // Connected: MAIN
+          h('div', { onconnected: Log('Connected') },                    // Connected: DIV
+            h('span', { style: { color: 'green' } }, 'Hello'),
+            state.world &&                                               // Disconnected: SPAN
+            h('span', { ondisconnected: Log('Disconnected'), style: { color: 'blue' } }, ' World')
+          )
+        ),
+        h('p', null, h('i', null, 'open browser console to see events print out'))
+      )
+
+    const subscriptions = state => [timeout(RemoveWorld, { delay: 1000 })]
+
+    app({ init, view, node, subscriptions })
+  </script>
+</head>
+
+<body>
+  <section id="node"></section>
+</body>
+
+</html>
