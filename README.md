@@ -13,7 +13,7 @@
                             ╰───╯  ╰──┴─╯
 ```
 
-> Small wrapper for Hyperapp to emulate `connected` and `disconnected` lifecycle events.
+> Small wrapper for Hyperapp and Superfine to emulate `connected` and `disconnected` lifecycle events.
 
 ## Overview
 
@@ -31,32 +31,32 @@ Full app lifecycle events coverage including app root node.
 
 ```js
 import * as hyperapp from 'https://unpkg.com/hyperapp?module'
-import { timeout } from '@hyperapp/time'
+import { timeout } from 'https://unpkg.com/@hyperapp/time?module'
 import { lifecycle } from 'https://unpkg.com/hyperapp-lifecycle?module'
 
 const { app, h } = lifecycle(hyperapp)
 
 const Log = type => (state, evt) => console.log(`${type}:`, evt.target.tagName) || state
-const RemoveWorld = (state) => ({...state, world: false})
+const RemoveWorld = state => ({ ...state, world: false })
 
-app({
-  init: {world: true},
-  view: state =>
-    h('section', { onconnected: Log('Connected') },                       // Connected: SECTION
-      h('main', { onconnected: Log('Connected') },                        // Connected: MAIN
-        h('div', { onconnected: Log('Connected') },                       // Connected: DIV
-          h('span', null, 'hello'),
-          state.world &&
-            h('span', { ondisconnected: Log('Disconnected') }, 'world')   // Disconnected: SPAN
-        )
+const init = { world: true }
+
+const view = state =>
+  h('section', { onconnected: Log('Connected') },                    // Connected: SECTION
+    h('main', { onconnected: Log('Connected') },                     // Connected: MAIN
+      h('div', { onconnected: Log('Connected') },                    // Connected: DIV
+        h('span', { style: { color: 'green' } }, 'Hello'),
+        state.world &&                                               // Disconnected: SPAN
+        h('span', { ondisconnected: Log('Disconnected'), style: { color: 'blue' } }, ' World')
       )
     ),
-  node: document.getElementById('node'),
-  subscriptions: state =>[
-    timeout(RemoveWorld, {delay:1000})
-  ]
-})
- ```
+    h('p', null, h('i', null, 'open browser console to see events print out'))
+  )
+
+const subscriptions = state => [timeout(RemoveWorld, { delay: 1000 })]
+
+app({ init, view, node, subscriptions })
+```
 
 Notice that, the custom event `target` is the DOM node that defined the event handler.
 
@@ -68,32 +68,67 @@ The main point here to be aware of -as shown by the example below- is that, the 
 
 ```js
 import * as hyperapp from 'https://unpkg.com/hyperapp?module'
-import { timeout } from '@hyperapp/time'
+import { timeout } from 'https://unpkg.com/@hyperapp/time?module'
 import { lifecycle } from 'https://unpkg.com/hyperapp-lifecycle?module'
 
 const { app, h, l } = lifecycle(hyperapp, /* lite mode */ true)
 
 const Log = type => (state, evt) => console.log(`${type}:`, evt.target.tagName) || state
-const RemoveWorld = (state) => ({...state, world: false})
+const RemoveWorld = state => ({ ...state, world: false })
 
-app({
-  init: {world: true},
-  view: state =>
-    h('section', { onconnected: Log('Connected') },                       // Connected: SECTION
-      h('main', { onconnected: Log('Connected') },
-        l('div', { onconnected: Log('Connected') },
-          h('span', null, 'hello'),
-          state.world &&
-            h('span', { ondisconnected: Log('Disconnected') }, 'world')   // Disconnected: SPAN
-        )
+const init = { world: true }
+
+const view = state =>
+  h('section', { onconnected: Log('Connected') },                    // Connected: SECTION
+    h('main', { onconnected: Log('Connected') },
+      l('div', { onconnected: Log('Connected') },
+        h('span', { style: { color: 'green' } }, 'Hello'),
+        state.world &&                                               // Disconnected: SPAN
+        h('span', { ondisconnected: Log('Disconnected'), style: { color: 'blue' } }, ' World')
       )
     ),
-  node: document.getElementById('node'),
-  subscriptions: state =>[
-    timeout(RemoveWorld, {delay:1000})
-  ]
-})
+    h('p', null, h('i', null, 'open browser console to see events print out'))
+  )
+
+const subscriptions = state => [timeout(RemoveWorld, { delay: 1000 })]
+
+app({ init, view, node, subscriptions })
  ```
+
+## Superfine
+
+The same works for the [Superfine](https://github.com/jorgebucaran/superfine) library, yay!
+
+```js
+import * as superfine from 'https://unpkg.com/superfine?module'
+import { timeout } from 'https://unpkg.com/@hyperapp/time?module'
+import { lifecycle } from 'https://unpkg.com/hyperapp-lifecycle?module'
+
+const { patch, h } = lifecycle(superfine)
+
+const Log = type => evt => console.log(`${type}:`, evt.target.tagName)
+const RemoveWorld = state => ({ ...state, world: false })
+
+const init = { world: true }
+
+const view = state =>
+  h('section', { onconnected: Log('Connected') },                    // Connected: SECTION
+    h('main', { onconnected: Log('Connected') },                     // Connected: MAIN
+      h('div', { onconnected: Log('Connected') },                    // Connected: DIV
+        h('span', { style: 'color:green;' }, 'Hello'),
+        state.world &&                                               // Disconnected: SPAN
+        h('span', { ondisconnected: Log('Disconnected'), style: 'color:blue;' }, ' World')
+      )
+    ),
+    h('p', null, h('i', null, 'open browser console to see events print out'))
+  )
+
+const app = state => patch(node, view(state))
+
+app(init)
+
+setTimeout(()=> app(RemoveWorld(init)), 1000)
+```
 
 ## Credits
 

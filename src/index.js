@@ -1,6 +1,6 @@
 /**
- * Small wrapper for Hyperapp to emulate `connected` and `disconnected`
- * lifecycle events by means of custom events.
+ * Small wrapper for Hyperapp and Superfine to emulate `connected`
+ * and `disconnected` lifecycle events by means of custom events.
  *
  * @author Adnan M.Sagar <adnan@websemantics.ca>
  */
@@ -10,47 +10,55 @@ export let CONNECTED = 'connected'
 export let DISCONNECTED = 'disconnected'
 
 /**
- * Wrapper around Hyperapp `app` and `h` functions.
+ * Wrapper around Hyperapp `app` or Superfine `patch` and `h` functions.
  *
- * @param {Module} hyperapp - Imported Hyperapp module (see example above)
+ * @param {Module} module - Imported Hyperapp or Superfine module
  * @param {Boolean} lite - If true, `h` remains unchanged and `l` is used as needed
- * @returns {Object} {app, h, l}
+ * @returns {Object} {app, h, l} or {patch, h, l}
  */
 
-export function lifecycle(hyperapp, lite = false) {
-  /**
-   * Lifecycle hyperscript shorthand to use instead of original `hyperapp.h`
-   */
-  function l() {
-    return withChildLifeCycle(hyperapp.h.apply(null, arguments))
-  }
-
-  /**
-   * Lifecycle app to use instead of original `hyperapp.app`
-   *
-   * @description This will ensure that the app root node can receive the two
-   * lifecycle events, `connected` and `disconnected`
-   */
-  function app(props) {
-    props.node.parentNode.appendChild = wrap('appendChild', CONNECTED)
-    props.node.parentNode.insertBefore = wrap('insertBefore', CONNECTED)
-    props.node.parentNode.removeChild = wrap('removeChild', DISCONNECTED)
-
-    hyperapp.app.apply(null, arguments)
-
+export function lifecycle(module, lite = false) {
+  const exports = {
     /**
-     * Fire a `connected` event manually when the original node is being recycled
-     * by Hyperapp (will not incur `appendChild` or `insertBefore` calls)
+     * Lifecycle hyperscript shorthand to use instead of the original `module.h`
      */
-    if (props.view(props.init).name === props.node.nodeName.toLowerCase()) {
-      defer(() => props.node.dispatchEvent(new CustomEvent(CONNECTED)))
+    l: function l() {
+      return withChildLifeCycle(module.h.apply(null, arguments))
     }
   }
 
-  /* Use original hyperapp.h in lite mode */
-  const h = lite ? hyperapp.h : l
+  /* Use original module.h in lite mode */
+  exports.h = lite ? module.h : exports.l
 
-  return { app, h, l }
+  /**
+   * Enable lifecycle for app/patch to use instead of original `hyperapp.app` or `superfine.app`
+   *
+   * @description This will ensure that the app/patch root node can receive the two
+   * lifecycle events, `connected` and `disconnected`
+   */
+  function root(node, vdom, callback) {
+    node.parentNode.appendChild = wrap('appendChild', CONNECTED)
+    node.parentNode.insertBefore = wrap('insertBefore', CONNECTED)
+    node.parentNode.removeChild = wrap('removeChild', DISCONNECTED)
+
+    callback.call()
+
+    /**
+     * Fire a `connected` event manually when the original node is being recycled
+     * by module (will not incur `appendChild` or `insertBefore` calls)
+     */
+    if (vdom.name === node.nodeName.toLowerCase()) {
+      defer(() => node.dispatchEvent(new CustomEvent(CONNECTED)))
+    }
+  }
+
+  /* Export app if module is hyperapp */
+  if (module.app) exports.app = props => root(props.node, props.view(props.init), () => module.app.call(null, props))
+
+  /* Export patch if module is hyperapp */
+  if (module.patch) exports.patch = (node, vdom) => root(node, vdom, () => module.patch.call(null, node, vdom))
+
+  return exports
 }
 
 /* Shamelessly stolen from Hyperapp */
